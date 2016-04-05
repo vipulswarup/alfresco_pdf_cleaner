@@ -18,4 +18,4 @@ This project includes Alfresco (4.x,5.x) config files that in conjunction with Q
 
 4. Restart Tomcat
 
-Now DXF/DWG preview works on your Alfresco. More details can be found in my blog [post].
+Now DXF/DWG preview works on your Alfresco. More details can be found in my blog [post](http://soft29.info/blog/entry/alfresco-cad-dxf-dwg-preview).
