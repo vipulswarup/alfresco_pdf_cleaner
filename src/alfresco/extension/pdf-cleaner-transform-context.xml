@@ -15,7 +15,7 @@
 		</property>
 	</bean>
 
-	<!-- Register the transformer with high priority -->
+	<!-- Register the transformer -->
 	<bean id="transformer.PdfFix.registration" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
 		<property name="targetObject">
 			<ref bean="transformerRegistry" />
@@ -26,25 +26,6 @@
 		<property name="arguments">
 			<list>
 				<ref bean="transformer.PdfFix" />
-				<value>100</value>  <!-- High priority -->
-			</list>
-		</property>
-	</bean>
-
-	<!-- Register PDF to PDF transformation -->
-	<bean id="transformer.PdfFix.mimetype" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-		<property name="targetObject">
-			<ref bean="transformerRegistry" />
-		</property>
-		<property name="targetMethod">
-			<value>addTransformer</value>
-		</property>
-		<property name="arguments">
-			<list>
-				<ref bean="transformer.PdfFix" />
-				<value>application/pdf</value>
-				<value>application/pdf</value>
-				<value>100</value>  <!-- High priority -->
 			</list>
 		</property>
 	</bean>

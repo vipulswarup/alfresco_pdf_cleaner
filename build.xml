@@ -34,6 +34,10 @@
 	<target name="build">
 		<jar destfile="${package.file.jar}" basedir="${classes.dir}">
 			<exclude name="**/*.java"/>
+			<!-- Include properties files -->
+			<fileset dir="${src.dir}">
+				<include name="**/*.properties"/>
+			</fileset>
 		</jar>
 	</target>
 
