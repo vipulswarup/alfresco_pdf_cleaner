@@ -10,22 +10,30 @@
 		<property name="checkCommand">
 			<bean name="transformer.pdfcleaner.checkCommand" class="org.alfresco.util.exec.RuntimeExec">
 				<property name="commandsAndArguments">
-					<list>
-						<value>sh</value>
-						<value>-c</value>							
-						<value>which clean-oracle-pdf.sh</value>
-					</list>
+					<map>
+						<entry key=".*">
+							<list>
+								<value>sh</value>
+								<value>-c</value>							
+								<value>which clean-oracle-pdf.sh</value>
+							</list>
+						</entry>
+					</map>
 				</property>
 			</bean>
 		</property>
 		<property name="transformCommand">
 			<bean name="transformer.pdfcleaner.Command" class="org.alfresco.util.exec.RuntimeExec">
 				<property name="commandsAndArguments">
-					<list>
-						<value>sh</value>
-						<value>-c</value>
-						<value>clean-oracle-pdf.sh ${source} ${target}</value>
-					</list>
+					<map>
+						<entry key=".*">
+							<list>
+								<value>sh</value>
+								<value>-c</value>
+								<value>clean-oracle-pdf.sh ${source} ${target}</value>
+							</list>
+						</entry>
+					</map>
 				</property>
 				<property name="waitForCompletion">
 					<value>true</value>
