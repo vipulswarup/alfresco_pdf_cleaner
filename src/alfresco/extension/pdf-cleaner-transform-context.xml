@@ -1,57 +1,16 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
-	<bean id="transformer.worker.pdfcleaner"
-		class="org.alfresco.repo.content.transform.RuntimeExecutableContentTransformerWorker">
+	<!-- Custom PDF Fix Transformer -->
+	<bean id="transformer.PdfFix" class="org.alfresco.extension.transformer.CustomPdfFixTransformer">
 		<property name="mimetypeService">
 			<ref bean="mimetypeService" />
 		</property>
-		<property name="checkCommand">
-			<bean name="transformer.pdfcleaner.checkCommand" class="org.alfresco.util.exec.RuntimeExec">
-				<property name="commandsAndArguments">
-					<map>
-						<entry key=".*">
-							<list>
-								<value>sh</value>
-								<value>-c</value>							
-								<value>which clean-oracle-pdf.sh</value>
-							</list>
-						</entry>
-					</map>
-				</property>
-			</bean>
-		</property>
-		<property name="transformCommand">
-			<bean name="transformer.pdfcleaner.Command" class="org.alfresco.util.exec.RuntimeExec">
-				<property name="commandsAndArguments">
-					<map>
-						<entry key=".*">
-							<list>
-								<value>sh</value>
-								<value>-c</value>
-								<value>clean-oracle-pdf.sh ${source} ${target}</value>
-							</list>
-						</entry>
-					</map>
-				</property>
-				<property name="waitForCompletion">
-					<value>true</value>
-				</property>
-			</bean>
-		</property>
 	</bean>
 
-	<bean id="transformer.pdfcleaner"
-		class="org.alfresco.repo.content.transform.ProxyContentTransformer"
-		parent="baseContentTransformer">
-		<property name="worker">
-			<ref bean="transformer.worker.pdfcleaner" />
-		</property>
-	</bean>
-
-	<!-- Register transformer with the transformer registry -->
-	<bean id="transformer.pdfcleaner.registry" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+	<!-- Register the transformer -->
+	<bean id="transformer.PdfFix.registration" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
 		<property name="targetObject">
 			<ref bean="transformerRegistry" />
 		</property>
@@ -60,13 +19,13 @@
 		</property>
 		<property name="arguments">
 			<list>
-				<ref bean="transformer.pdfcleaner" />
+				<ref bean="transformer.PdfFix" />
 			</list>
 		</property>
 	</bean>
 
-	<!-- Register transformer for PDF to PDF transformation -->
-	<bean id="transformer.pdfcleaner.mimetype" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+	<!-- Register PDF to PDF transformation -->
+	<bean id="transformer.PdfFix.mimetype" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
 		<property name="targetObject">
 			<ref bean="transformerRegistry" />
 		</property>
@@ -75,7 +34,7 @@
 		</property>
 		<property name="arguments">
 			<list>
-				<ref bean="transformer.pdfcleaner" />
+				<ref bean="transformer.PdfFix" />
 				<value>application/pdf</value>
 				<value>application/pdf</value>
 			</list>

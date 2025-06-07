@@ -1,22 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Alfresco PDF Cleaner" default="main" basedir=".">
-	<property name="project.dir" value="." />
-	<property name="build.dir" value="${project.dir}/build" />
-	<property name="src.dir" value="${project.dir}/src" />	
-	<property name="project.name" value="alf-pdf-cleaner" />
-	<property name="package.file.jar" value="${build.dir}/${project.name}.jar" />	
+<project name="alfresco-pdf-cleaner" default="main" basedir=".">
+	<property name="src.dir" value="src"/>
+	<property name="build.dir" value="build"/>
+	<property name="classes.dir" value="${build.dir}/classes"/>
+	<property name="package.file.jar" value="${build.dir}/alf-pdf-cleaner.jar"/>
+	
+	<!-- Alfresco properties -->
+	<property name="alfresco.dir" value="${env.alfresco.dir}"/>
+	<property name="alfresco.lib.dir" value="${alfresco.dir}/WEB-INF/lib"/>
+	
+	<path id="classpath">
+		<fileset dir="${alfresco.lib.dir}">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
 
-	<target name="clean" description="Removes generated jar, creates necessary dir">
-		<delete dir="${build.dir}" />
-		<mkdir dir="${build.dir}" />		
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${classes.dir}"/>
 	</target>
 
-	<target name="build" description="Creates a jar called ${package.file.jar} which can be deployed on top of an exploded Alfresco web app">
-		<jar jarfile="${package.file.jar}">
-			<fileset dir="${src.dir}" />
-		</jar>
-	</target>	
-	
-	<target name="main" depends="clean, build"/>
+	<target name="compile">
+		<javac srcdir="${src.dir}" 
+			   destdir="${classes.dir}" 
+			   classpathref="classpath"
+			   includeantruntime="false"
+			   debug="true"
+			   source="1.8"
+			   target="1.8"/>
+	</target>
 
+	<target name="build">
+		<jar destfile="${package.file.jar}" basedir="${classes.dir}">
+			<exclude name="**/*.java"/>
+		</jar>
+	</target>
+
+	<target name="main" depends="clean, compile, build"/>
 </project>
