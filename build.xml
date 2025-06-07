@@ -6,7 +6,7 @@
 	<property name="package.file.jar" value="${build.dir}/alf-pdf-cleaner.jar"/>
 	
 	<!-- Alfresco properties -->
-	<property name="alfresco.dir" value="${env.alfresco.dir}"/>
+	<property name="alfresco.dir" value="${env.ALFRESCO_DIR}"/>
 	<property name="alfresco.lib.dir" value="${alfresco.dir}/WEB-INF/lib"/>
 	
 	<path id="classpath">
@@ -32,11 +32,18 @@
 	</target>
 
 	<target name="build">
-		<jar destfile="${package.file.jar}" basedir="${classes.dir}">
-			<exclude name="**/*.java"/>
+		<jar destfile="${package.file.jar}">
+			<!-- Include compiled classes -->
+			<fileset dir="${classes.dir}">
+				<include name="**/*.class"/>
+			</fileset>
 			<!-- Include properties files -->
 			<fileset dir="${src.dir}">
 				<include name="**/*.properties"/>
+			</fileset>
+			<!-- Include Spring context files -->
+			<fileset dir="${src.dir}">
+				<include name="**/*.xml"/>
 			</fileset>
 		</jar>
 	</target>
