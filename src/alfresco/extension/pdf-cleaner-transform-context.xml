@@ -63,6 +63,7 @@
 				<ref bean="transformer.pdfcleaner" />
 				<value>application/pdf</value>
 				<value>application/pdf</value>
+				<value>50</value>
 			</list>
 		</property>
 	</bean>
