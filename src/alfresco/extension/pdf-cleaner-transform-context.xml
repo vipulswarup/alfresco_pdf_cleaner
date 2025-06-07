@@ -2,10 +2,6 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
-	<!-- Import Alfresco's core services -->
-	<import resource="classpath:alfresco/core-services-context.xml"/>
-	<import resource="classpath:alfresco/application-context.xml"/>
-
 	<!-- Custom PDF Fix Transformer -->
 	<bean id="transformer.PdfFix" class="org.alfresco.extension.transformer.CustomPdfFixTransformer">
 		<property name="mimetypeService">

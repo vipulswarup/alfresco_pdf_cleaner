@@ -4,4 +4,7 @@
 <beans>
     <!-- Import our transformer configuration -->
     <import resource="classpath:alfresco/extension/pdf-cleaner-transform-context.xml"/>
+    
+    <!-- Import Alfresco's core services -->
+    <import resource="classpath:alfresco/core-services-context.xml"/>
 </beans> 
