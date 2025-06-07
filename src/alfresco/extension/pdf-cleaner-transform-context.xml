@@ -50,23 +50,6 @@
 		</property>
 	</bean>
 
-	<!-- Configure when to use the PDF cleaner transformer -->
-	<bean id="transformer.pdfcleaner.registration" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-		<property name="targetObject">
-			<ref bean="contentService" />
-		</property>
-		<property name="targetMethod">
-			<value>registerTransformer</value>
-		</property>
-		<property name="arguments">
-			<list>
-				<ref bean="transformer.pdfcleaner" />
-				<value>application/pdf</value>
-				<value>application/pdf</value>
-			</list>
-		</property>
-	</bean>
-
 	<!-- Register transformer with the transformer registry -->
 	<bean id="transformer.pdfcleaner.registry" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
 		<property name="targetObject">
@@ -78,6 +61,23 @@
 		<property name="arguments">
 			<list>
 				<ref bean="transformer.pdfcleaner" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- Register transformer for PDF to PDF transformation -->
+	<bean id="transformer.pdfcleaner.mimetype" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject">
+			<ref bean="transformerRegistry" />
+		</property>
+		<property name="targetMethod">
+			<value>addTransformer</value>
+		</property>
+		<property name="arguments">
+			<list>
+				<ref bean="transformer.pdfcleaner" />
+				<value>application/pdf</value>
+				<value>application/pdf</value>
 			</list>
 		</property>
 	</bean>
