@@ -5,9 +5,20 @@
 	<property name="classes.dir" value="${build.dir}/classes"/>
 	<property name="package.file.jar" value="${build.dir}/alf-pdf-cleaner.jar"/>
 	
-	<!-- Alfresco properties -->
-	<property name="alfresco.dir" value="${env.ALFRESCO_DIR}"/>
+	<!-- Alfresco properties - use command line property if provided, otherwise use environment variable -->
+	<property name="alfresco.dir" value="${alfresco.dir}"/>
 	<property name="alfresco.lib.dir" value="${alfresco.dir}/WEB-INF/lib"/>
+	
+	<!-- Verify Alfresco lib directory exists -->
+	<target name="check-alfresco-lib">
+		<fail message="Alfresco lib directory not found at ${alfresco.lib.dir}. Please set alfresco.dir property.">
+			<condition>
+				<not>
+					<available file="${alfresco.lib.dir}" type="dir"/>
+				</not>
+			</condition>
+		</fail>
+	</target>
 	
 	<path id="classpath">
 		<fileset dir="${alfresco.lib.dir}">
@@ -21,7 +32,8 @@
 		<mkdir dir="${classes.dir}"/>
 	</target>
 
-	<target name="compile">
+	<target name="compile" depends="check-alfresco-lib">
+		<echo message="Compiling with Alfresco libs from: ${alfresco.lib.dir}"/>
 		<javac srcdir="${src.dir}" 
 			   destdir="${classes.dir}" 
 			   classpathref="classpath"
@@ -31,7 +43,8 @@
 			   target="1.8"/>
 	</target>
 
-	<target name="build">
+	<target name="build" depends="compile">
+		<echo message="Building JAR file: ${package.file.jar}"/>
 		<jar destfile="${package.file.jar}">
 			<!-- Include compiled classes -->
 			<fileset dir="${classes.dir}">

@@ -23,8 +23,11 @@ fi
 
 echo "Building PDF cleaner..."
 # Set Alfresco directory for build
-export ALFRESCO_DIR="$ALFRESCO_PATH/tomcat/webapps/alfresco"
-ant -Dalfresco.dir="$ALFRESCO_DIR" clean build
+ALFRESCO_DIR="$ALFRESCO_PATH/tomcat/webapps/alfresco"
+echo "Using Alfresco directory: $ALFRESCO_DIR"
+
+# Run ant with the alfresco.dir property
+ant -Dalfresco.dir="$ALFRESCO_DIR" main
 
 if [ $? -ne 0 ]; then
     echo "Error: Build failed"
@@ -51,7 +54,9 @@ fi
 
 # Set proper permissions
 echo "Setting permissions..."
-sudo chown -R alfresco:alfresco "$ALFRESCO_PATH/alfresco/logs"
+# Use the current user instead of hardcoded alfresco:alfresco
+CURRENT_USER=$(whoami)
+sudo chown -R "$CURRENT_USER:$CURRENT_USER" "$ALFRESCO_PATH/alfresco/logs"
 
 echo "Deployment complete!"
 echo "Please restart Alfresco to apply changes:"
