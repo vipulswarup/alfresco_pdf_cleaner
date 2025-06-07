@@ -1,21 +1,107 @@
-# Alfresco CAD (dxf, dwg) preview support
-This project includes Alfresco (4.x,5.x) config files that in conjunction with QCAD software provide DWG/DXF engineering documents preview within your Alfresco Share. Works on Linux and on Windows.
 
-1. Download [trial](http://www.qcad.org/en/qcad-downloads-trial) QCAD converter to some dir (e.g. "/opt/qcad"). This software will perform a dxf/dwg to pdf transformation required for workable preview in Alfresco. Yes it's trial and that's why it takes extra 15 seconds before conversion starts. But it's the best solution I've found.
-2. Build current project using Apache Ant. It will generate a /%project_dir%/build/alf-cad-support.jar file that should be deployed to your alfresco webapp instance: %tomcat_dir%/webapps/alfresco/WEB-INF/lib/.
-3. Add to you alfresco-global.properties:
->dwg2pdf.root=/opt/qcad
->
->content.transformer.dwg2pdf.priority=50
->
->content.transformer.dwg2pdf.extensions.dwg.pdf.supported=true
->content.transformer.dwg2pdf.extensions.dwg.pdf.priority=50
->
->content.transformer.dxf2pdf.priority=50
->
->content.transformer.dxf2pdf.extensions.dxf.pdf.supported=true
->content.transformer.dxf2pdf.extensions.dxf.pdf.priority=50
+# Alfresco PDF Cleaner
 
-4. Restart Tomcat
+This project provides a solution for cleaning Oracle-generated PDFs in Alfresco. It automatically detects PDFs created by Oracle applications and processes them through Ghostscript to ensure proper preview functionality in Alfresco Share.
 
-Now DXF/DWG preview works on your Alfresco. More details can be found in my blog [post](http://soft29.info/blog/entry/alfresco-cad-dxf-dwg-preview).
+## Prerequisites
+
+- Ubuntu 24.04 LTS
+- Alfresco installed at `/opt/eisenvault_installations/<client_folder>/`
+- Java 11 or later
+- Apache Ant
+
+## Dependencies
+
+Install the required system packages:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y \
+    ghostscript \
+    poppler-utils \
+    ant
+```
+
+## Installation
+
+1. Clone this repository:
+```bash
+git clone <repository-url>
+cd alfresco_pdf_cleaner
+```
+
+2. Build the project:
+```bash
+ant
+```
+This will create `build/alf-pdf-cleaner.jar`
+
+3. Deploy the JAR file:
+```bash
+# Replace <client_folder> with your actual client folder name
+sudo cp build/alf-pdf-cleaner.jar /opt/eisenvault_installations/<client_folder>/tomcat/webapps/alfresco/WEB-INF/lib/
+```
+
+4. Install the PDF cleaning script:
+```bash
+# Create scripts directory if it doesn't exist
+sudo mkdir -p /opt/eisenvault_installations/<client_folder>/scripts
+
+# Copy the script
+sudo cp src/scripts/clean-oracle-pdf.sh /opt/eisenvault_installations/<client_folder>/scripts/
+
+# Make it executable
+sudo chmod +x /opt/eisenvault_installations/<client_folder>/scripts/clean-oracle-pdf.sh
+
+# Create a symlink to make it available in PATH
+sudo ln -s /opt/eisenvault_installations/<client_folder>/scripts/clean-oracle-pdf.sh /usr/local/bin/clean-oracle-pdf.sh
+```
+
+5. Create log directory:
+```bash
+sudo mkdir -p /opt/eisenvault_installations/<client_folder>/alfresco/logs
+sudo chown -R alfresco:alfresco /opt/eisenvault_installations/<client_folder>/alfresco/logs
+```
+
+6. Restart Alfresco:
+```bash
+sudo systemctl restart alfresco
+```
+
+## How it Works
+
+The PDF cleaner:
+1. Intercepts PDF preview requests in Alfresco
+2. Checks if the PDF was created by Oracle
+3. If it's an Oracle PDF:
+   - Processes it through Ghostscript to clean and optimize
+   - Saves the cleaned version for preview
+4. If it's not an Oracle PDF:
+   - Passes it through unchanged
+
+## Logging
+
+The transformation process is logged to:
+```
+/opt/eisenvault_installations/<client_folder>/alfresco/logs/oracle_pdf_cleaner.log
+```
+
+You can monitor the logs in real-time:
+```bash
+tail -f /opt/eisenvault_installations/<client_folder>/alfresco/logs/oracle_pdf_cleaner.log
+```
+
+## Troubleshooting
+
+1. If PDFs aren't being cleaned:
+   - Check if the script is in PATH: `which clean-oracle-pdf.sh`
+   - Verify script permissions: `ls -l /usr/local/bin/clean-oracle-pdf.sh`
+   - Check Alfresco logs for errors
+
+2. If Ghostscript fails:
+   - Verify installation: `gs --version`
+   - Check script logs for specific error messages
+
+3. If preview isn't working:
+   - Verify JAR deployment: `ls -l /opt/eisenvault_installations/<client_folder>/tomcat/webapps/alfresco/WEB-INF/lib/alf-pdf-cleaner.jar`
+   - Check Alfresco logs for transformation errors

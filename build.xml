@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Alfresco CAD (dxf, dwg) support" default="main" basedir=".">
+<project name="Alfresco PDF Cleaner" default="main" basedir=".">
 	<property name="project.dir" value="." />
 	<property name="build.dir" value="${project.dir}/build" />
 	<property name="src.dir" value="${project.dir}/src" />	
-	<property name="project.name" value="alf-cad-support" />
+	<property name="project.name" value="alf-pdf-cleaner" />
 	<property name="package.file.jar" value="${build.dir}/${project.name}.jar" />	
 
 	<target name="clean" description="Removes generated jar, creates necessary dir">
