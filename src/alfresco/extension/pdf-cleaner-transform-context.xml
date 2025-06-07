@@ -29,4 +29,7 @@
 			</list>
 		</property>
 	</bean>
+
+	<!-- Import the transformer registry -->
+	<import resource="classpath:alfresco/extension/transformer-registry-context.xml"/>
 </beans>
