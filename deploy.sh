@@ -23,8 +23,8 @@ fi
 
 echo "Building PDF cleaner..."
 # Set Alfresco directory for build
-export alfresco.dir="$ALFRESCO_PATH/tomcat/webapps/alfresco"
-ant clean build
+export ALFRESCO_DIR="$ALFRESCO_PATH/tomcat/webapps/alfresco"
+ant -Dalfresco.dir="$ALFRESCO_DIR" clean build
 
 if [ $? -ne 0 ]; then
     echo "Error: Build failed"
