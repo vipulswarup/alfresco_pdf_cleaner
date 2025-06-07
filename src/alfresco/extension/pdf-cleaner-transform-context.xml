@@ -2,31 +2,67 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
-	<!-- Custom PDF Fix Transformer -->
-	<bean id="transformer.PdfFix" class="org.alfresco.extension.transformer.CustomPdfFixTransformer">
+	<!-- Worker bean for PDF cleaning -->
+	<bean id="transformer.worker.pdfcleaner"
+		class="org.alfresco.repo.content.transform.RuntimeExecutableContentTransformerWorker">
 		<property name="mimetypeService">
 			<ref bean="mimetypeService" />
 		</property>
-		<property name="transformerConfig">
-			<ref bean="transformerConfig" />
+		<property name="checkCommand">
+			<bean name="transformer.pdfcleaner.checkCommand" class="org.alfresco.util.exec.RuntimeExec">
+				<property name="commandsAndArguments">
+					<map>
+						<entry key="Linux.*">
+							<list>
+								<value>sh</value>
+								<value>-c</value>
+								<value>${pdfcleaner.root}/clean-oracle-pdf.sh -h</value>
+							</list>
+						</entry>
+						<entry key="Windows.*">
+							<list>
+								<value>cmd</value>
+								<value>/C</value>
+								<value>cd ${pdfcleaner.root} &amp;&amp; clean-oracle-pdf.sh -h</value>
+							</list>
+						</entry>
+					</map>
+				</property>
+			</bean>
 		</property>
-		<property name="transformerDebug">
-			<ref bean="transformerDebug" />
+		<property name="transformCommand">
+			<bean name="transformer.pdfcleaner.Command" class="org.alfresco.util.exec.RuntimeExec">
+				<property name="commandsAndArguments">
+					<map>
+						<entry key="Linux.*">
+							<list>
+								<value>sh</value>
+								<value>-c</value>
+								<value>${pdfcleaner.root}/clean-oracle-pdf.sh ${source} ${target}</value>
+							</list>
+						</entry>
+						<entry key="Windows.*">
+							<list>
+								<value>cmd</value>
+								<value>/C</value>
+								<value>cd ${pdfcleaner.root} &amp;&amp; clean-oracle-pdf.sh ${source} ${target}</value>
+							</list>
+						</entry>
+					</map>
+				</property>
+				<property name="waitForCompletion">
+					<value>true</value>
+				</property>
+			</bean>
 		</property>
 	</bean>
 
-	<!-- Register the transformer -->
-	<bean id="transformer.PdfFix.registration" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-		<property name="targetObject">
-			<ref bean="transformerRegistry" />
-		</property>
-		<property name="targetMethod">
-			<value>addTransformer</value>
-		</property>
-		<property name="arguments">
-			<list>
-				<ref bean="transformer.PdfFix" />
-			</list>
+	<!-- Proxy transformer bean -->
+	<bean id="transformer.pdfcleaner"
+		class="org.alfresco.repo.content.transform.ProxyContentTransformer"
+		parent="baseContentTransformer">
+		<property name="worker">
+			<ref bean="transformer.worker.pdfcleaner" />
 		</property>
 	</bean>
 </beans>
