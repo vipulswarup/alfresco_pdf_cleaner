@@ -49,7 +49,7 @@ fi
 
 # Set proper permissions
 echo "Setting permissions..."
-sudo chown -R alfresco:alfresco "$ALFRESCO_PATH/alfresco/logs"
+sudo chown -R evadm:evadm "$ALFRESCO_PATH/alfresco/logs"
 
 echo "Deployment complete!"
 echo "Please restart Alfresco to apply changes:"

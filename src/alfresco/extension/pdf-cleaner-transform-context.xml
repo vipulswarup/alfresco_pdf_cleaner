@@ -63,7 +63,21 @@
 				<ref bean="transformer.pdfcleaner" />
 				<value>application/pdf</value>
 				<value>application/pdf</value>
-				<value>50</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Register transformer with the transformer registry -->
+	<bean id="transformer.pdfcleaner.registry" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject">
+			<ref bean="transformerRegistry" />
+		</property>
+		<property name="targetMethod">
+			<value>addTransformer</value>
+		</property>
+		<property name="arguments">
+			<list>
+				<ref bean="transformer.pdfcleaner" />
 			</list>
 		</property>
 	</bean>
