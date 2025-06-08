@@ -55,6 +55,18 @@
 				</property>
 			</bean>
 		</property>
+		<property name="explicitTransformations">
+			<list>
+				<bean class="org.alfresco.repo.content.transform.ContentTransformerRegistry$TransformationKey">
+					<constructor-arg>
+						<value>application/pdf</value>
+					</constructor-arg>
+					<constructor-arg>
+						<value>application/pdf</value>
+					</constructor-arg>
+				</bean>
+			</list>
+		</property>
 	</bean>
 
 	<!-- Proxy transformer bean -->
@@ -62,6 +74,21 @@
 		class="org.alfresco.repo.content.transform.ProxyContentTransformer">
 		<property name="worker">
 			<ref bean="transformer.worker.pdfcleaner" />
+		</property>
+	</bean>
+
+	<!-- Register the transformer -->
+	<bean id="transformer.pdfcleaner.registration" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject">
+			<ref bean="transformerRegistry" />
+		</property>
+		<property name="targetMethod">
+			<value>addTransformer</value>
+		</property>
+		<property name="arguments">
+			<list>
+				<ref bean="transformer.pdfcleaner" />
+			</list>
 		</property>
 	</bean>
 </beans>
