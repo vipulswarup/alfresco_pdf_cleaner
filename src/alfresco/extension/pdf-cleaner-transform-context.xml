@@ -59,10 +59,24 @@
 
 	<!-- Proxy transformer bean -->
 	<bean id="transformer.pdfcleaner"
-		class="org.alfresco.repo.content.transform.ProxyContentTransformer"
-		parent="baseContentTransformer">
+		class="org.alfresco.repo.content.transform.ProxyContentTransformer">
 		<property name="worker">
 			<ref bean="transformer.worker.pdfcleaner" />
+		</property>
+	</bean>
+
+	<!-- Register the transformer -->
+	<bean id="transformer.pdfcleaner.registration" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject">
+			<ref bean="contentService" />
+		</property>
+		<property name="targetMethod">
+			<value>registerTransformer</value>
+		</property>
+		<property name="arguments">
+			<list>
+				<ref bean="transformer.pdfcleaner" />
+			</list>
 		</property>
 	</bean>
 </beans>
