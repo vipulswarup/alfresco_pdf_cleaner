@@ -57,13 +57,13 @@
 		</property>
 		<property name="explicitTransformations">
 			<list>
-				<bean class="org.alfresco.repo.content.transform.ContentTransformerRegistry$TransformationKey">
-					<constructor-arg>
+				<bean class="org.alfresco.repo.content.transform.ExplictTransformationDetails">
+					<property name="sourceMimetype">
 						<value>application/pdf</value>
-					</constructor-arg>
-					<constructor-arg>
+					</property>
+					<property name="targetMimetype">
 						<value>application/pdf</value>
-					</constructor-arg>
+					</property>
 				</bean>
 			</list>
 		</property>
