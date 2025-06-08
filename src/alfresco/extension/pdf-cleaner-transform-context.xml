@@ -80,10 +80,10 @@
 	<!-- Register the transformer -->
 	<bean id="transformer.pdfcleaner.registration" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
 		<property name="targetObject">
-			<ref bean="contentService" />
+			<ref bean="transformerRegistry" />
 		</property>
 		<property name="targetMethod">
-			<value>registerTransformer</value>
+			<value>addTransformer</value>
 		</property>
 		<property name="arguments">
 			<list>
